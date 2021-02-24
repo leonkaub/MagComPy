@@ -1,0 +1,11 @@
+name: magcompy
+dependencies:
+  - numpy
+  - matplotlib
+  - scipy
+  - wxpython
+  - pandas
+  - pip
+  - pyproj
+  - pip:
+    - rdp
