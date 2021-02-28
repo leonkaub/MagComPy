@@ -47,4 +47,4 @@ This project is licensed under [GNU AGPL v3](https://www.gnu.org/licenses/agpl-3
 
 If you use this software, please cite:
 
-Kaub, L., Keller, G., Bouligand, C., & Glen, J.M.G. (2021). Magnetic surveys with Unmanned Aerial Systems: software for assessing and comparing the accuracy of different sensor systems, suspension designs and compensation methods. Submitted to Geochemistry, Geophysics, Geosystems on 24 Feb 2021.
+Kaub, L., Keller, G., Bouligand, C., & Glen, J.M.G. (2021). Magnetic surveys with Unmanned Aerial Systems: software for assessing and comparing the accuracy of different sensor systems, suspension designs and compensation methods. Submitted to Geochemistry, Geophysics, Geosystems.
