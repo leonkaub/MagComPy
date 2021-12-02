@@ -1,8 +1,5 @@
 # MagComPy
 
-[![DOI](https://zenodo.org/badge/341664463.svg)](https://zenodo.org/badge/latestdoi/341664463)
-
-
 This is software to work with aeromag data from sUAS (small Unmanned Aerial Systems) flights. It is mainly designed for Magnetic Compensation that is possible with both scalar and vector magnetic data. Two sensor systems are currently supported: Geometrics MagArrow (scalar) and SenSys MagDrone (vector). Other sensor systems or platforms can easily be adapted.
 
 Main features are a tool to prepare files from raw sensor format to a more usable csv format, tools for magnetic compensation for both scalar and vector data, and a tool to calculate tie-line cross-differences for quality control.
@@ -42,7 +39,7 @@ lkaub@geophysik.uni-muenchen.de
 
 Main developer: Leon Kaub
 
-Many thanks to: Gordon Keller, Claire Bouligand, Grégory More, Jonathan Glen
+Contributors: Gordon Keller, Claire Bouligand, Grégory More, Jonathan Glen
 
 ## License
 
@@ -50,4 +47,4 @@ This project is licensed under [GNU AGPL v3](https://www.gnu.org/licenses/agpl-3
 
 If you use this software, please cite:
 
-Kaub, L., Keller, G., Bouligand, C., & Glen, J.M.G. (2021). Magnetic surveys with Unmanned Aerial Systems: software for assessing and comparing the accuracy of different sensor systems, suspension designs and compensation methods. Submitted to Geochemistry, Geophysics, Geosystems.
+Kaub, L., Keller, G., Bouligand, C., & Glen, J. M. G. (2021). Magnetic surveys with Unmanned Aerial Systems: Software for assessing and comparing the accuracy of different sensor systems, suspension designs and compensation methods. Geochemistry, Geophysics, Geosystems, 22, e2021GC009745. https://doi.org/10.1029/2021GC009745 
