@@ -1,5 +1,7 @@
 # MagComPy
 
+[![DOI](https://zenodo.org/badge/341664463.svg)](https://zenodo.org/badge/latestdoi/341664463)
+
 This is software to work with aeromag data from sUAS (small Unmanned Aerial Systems) flights. It is mainly designed for Magnetic Compensation that is possible with both scalar and vector magnetic data. Two sensor systems are currently supported: Geometrics MagArrow (scalar) and SenSys MagDrone (vector). Other sensor systems or platforms can easily be adapted.
 
 Main features are a tool to prepare files from raw sensor format to a more usable csv format, tools for magnetic compensation for both scalar and vector data, and a tool to calculate tie-line cross-differences for quality control.
