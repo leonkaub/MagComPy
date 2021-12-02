@@ -81,12 +81,25 @@ def filt(data, freq, tap_p, df, filter_type):
     """
     combines the full filter process: 1. demean 2. pad with first/last values 3. taper 4. filter
     """
-    npts = len(data)
+    npts = npts_for_taper = len(data)
     p = tap_p / (1 + tap_p)
-    taper = cos_taper(int(round((1 + tap_p) * npts)), p)
-    data = demean(data)
-    padded = padding(data, tap_p)
+
+    data = demean(data)  # remove the mean of the signal
+    padded = padding(data, tap_p)  # increase length of signal by tap_p
+
+    # getting the correct taper length (mismatch possible because of rounding errors)
+    while True:
+        taper = cos_taper(int(round((1 + tap_p) * npts_for_taper)), p)
+        if len(taper) == len(padded):
+            break
+        elif len(taper) < len(padded):
+            npts_for_taper += 1
+        else:
+            npts_for_taper -= 1
+
     tapered = padded * taper
+
+    # filter
     if filter_type == 'lp':
         filtered = lowpass(tapered, cut=freq, df=df, zero_phase=True)
     elif filter_type == 'hp':
@@ -94,6 +107,8 @@ def filt(data, freq, tap_p, df, filter_type):
     else:
         print('Incorrect filter type (lp or hp')
         filtered = None
+
+    # signal needs to get cut back to original length
     return filtered[int(0.5 * tap_p * npts):int((1 + 0.5 * tap_p) * npts)]
 
 
@@ -101,12 +116,25 @@ def filter_lp_no_detrend(data, freq, tap_p, df):
     """
     combines the full LP-filter process but without detrending: 1. pad with first/last values 2. taper 3. filter
     """
-    npts = len(data)
+    npts = npts_for_taper = len(data)
     p = tap_p / (1 + tap_p)
-    taper = cos_taper(int(round((1 + tap_p) * npts)), p)
+
     padded = padding(data, tap_p)
+
+    # getting the correct taper length (mismatch possible because of rounding errors)
+    while True:
+        taper = cos_taper(int(round((1 + tap_p) * npts_for_taper)), p)
+        if len(taper) == len(padded):
+            break
+        elif len(taper) < len(padded):
+            npts_for_taper += 1
+        else:
+            npts_for_taper -= 1
+
     tapered = padded * taper
     lp = lowpass(tapered, cut=freq, df=df, zero_phase=True)
+
+    # signal needs to get cut back to original length
     return lp[int(0.5 * tap_p * npts):int((1 + 0.5 * tap_p) * npts)]
 
 
