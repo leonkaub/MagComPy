@@ -122,6 +122,7 @@ class VectorComp(MyVectorFrame):
         # compute parameters
         self.coefficients, rep = vc.compute_parameters(self.find_F, self.scalar)
         self.coef.SetValue(str(self.coefficients))
+        self.coef_file.SetValue("")
         self.log_text.AppendText(f'{datetime.now()}: Coefficients calculated:\n')
         self.log_text.AppendText(rep)
         self.log_text.AppendText('\n')
@@ -139,11 +140,34 @@ class VectorComp(MyVectorFrame):
         plt.show()
 
     def on_load_coef_btn(self, event):
-        self.log_text.AppendText('coming soon\n')
+        dlg = wx.FileDialog(self, "Choose a file", "", "", "*.*", wx.FD_OPEN)
+        if dlg.ShowModal() == wx.ID_OK:
+            filename = dlg.GetPath()
+            self.coef_file.SetValue(filename)
+        else:
+            return
+
+        try:
+            coef = np.genfromtxt(filename)
+
+        except IOError:
+            self.log_text.AppendText(f'{datetime.now()}: Something wrong with the file. Please check file path.\n')
+            return
+
+        if len(coef) != 9:  # we need exactly 9 coefficients
+            self.log_text.AppendText(f'{datetime.now()}: The file did not contain exactly 9 coefficients. '
+                                     f'Please check file and try again\n')
+            return
+
+        # set self.coefficients as file and content seem to be okay
+        self.coefficients = coef
+        self.coef.SetValue(str(self.coefficients))
+        self.log_text.AppendText(f'{datetime.now()}: Coefficients loaded from file {filename}:\n{self.coefficients}\n')
 
     def on_save_coef_btn(self, event):
         if self.coefficients is None:
             self.log_text.AppendText(f'{datetime.now()}: Please compute coefficients first\n')
+            return
 
         dlg = wx.FileDialog(self, message='Save parameters', defaultDir="", defaultFile="",
                             wildcard="csv files (*.csv)|*.csv", style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
@@ -250,6 +274,7 @@ class VectorComp(MyVectorFrame):
             fname += '.csv'
 
         comment = f'coefficients for vector compensation computed with MagComPy\n' \
+                  f'{datetime.now()}\n' \
                   f'compensation file: {self.find_file.GetValue()}\n' \
                   f'scalar value: {self.scalar[0]}'
 
