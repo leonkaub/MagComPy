@@ -85,7 +85,8 @@ class MyFrame(MyCrossFrame):
             return
 
         try:
-            self.log_text.AppendText(f'{datetime.now()}: Loading data. Please wait.\n')
+            self.filename = self.load_text.GetValue()
+            self.log_text.AppendText(f'{datetime.now()}: Loading data from file {self.filename}.\nPlease wait.\n')
             # noinspection PyTypeChecker
             self.data = np.genfromtxt(self.filename, dtype=None, names=True, delimiter=',', usemask=False,
                                       encoding='ascii')

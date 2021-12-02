@@ -63,6 +63,8 @@ class MyFrame(MyPrepFrame):
             self.log_text.AppendText(f'{datetime.now()}\tPlease select a basestation file first\n')
             return
 
+        self.base_filename = self.base_fname.GetValue()
+
         base = prep_functions.Base(self.base_filename, utc=int(config['Base']['utc_offset']))
         base_data = base.read_file()
 
@@ -97,11 +99,13 @@ class MyFrame(MyPrepFrame):
             return
 
         # BASE STATION DATA
+        self.base_filename = self.base_fname.GetValue()
         self.log_text.AppendText(f'{datetime.now()}:\tBase station file: {self.base_filename}\n')
         base = prep_functions.Base(self.base_filename, utc=int(config['Base']['utc_offset']))
         base_data = base.read_file()
 
         # MAG DATA
+        self.filename = self.file_fname.GetValue()
         sensor = self.sensor_radio_box.GetStringSelection()
 
         if sensor == 'MagArrow':
@@ -195,6 +199,7 @@ class MyFrame(MyPrepFrame):
 
         if len(sensors_working) == 3:  # take all GNSS sensors
             fl_columns = ['offsetTime',
+                          f'IMU_ATTI({sensors_working[0]}):barometer:Smooth[meters]',
                           'GPS(0):Time',
                           'GPS(1):Time',
                           'GPS(2):Time',
@@ -213,6 +218,7 @@ class MyFrame(MyPrepFrame):
 
         elif len(sensors_working) == 2:  # take only 2 GNSS sensors
             fl_columns = ['offsetTime',
+                          f'IMU_ATTI({sensors_working[0]}):barometer:Smooth[meters]',
                           f'GPS({sensors_working[0]}):Time',
                           f'GPS({sensors_working[1]}):Time',
                           f'GPS({sensors_working[0]}):Lat[degrees]',
@@ -226,11 +232,14 @@ class MyFrame(MyPrepFrame):
 
         else:  # take only 1 GNSS sensor
             fl_columns = ['offsetTime',
+                          f'IMU_ATTI({sensors_working[0]}):barometer:Smooth[meters]',
                           f'GPS({sensors_working[0]}):Time',
                           f'GPS({sensors_working[0]}):Lat[degrees]',
                           f'GPS({sensors_working[0]}):Long[degrees]',
                           f'IMU_ATTI({sensors_working[0]}):Latitude[degrees [-180;180]]',
                           f'IMU_ATTI({sensors_working[0]}):Longitude[degrees [-180;180]]']
+
+        self.flightlog_filename = self.flightlog_file.GetValue()
 
         fl_data = pd.read_csv(self.flightlog_filename, usecols=fl_columns)
         # remove 1st row if flightlog converter added NaN to beginning
@@ -281,7 +290,8 @@ class MyFrame(MyPrepFrame):
 
         # no need to save all data from FL. take only columns specified in fl_cols
         fl_cols = np.array(['GPS(Fuse):Lat[degrees]', 'GPS(Fuse):Long[degrees]', 'GPS(Fuse):Time',
-                            'X_flightlog_m', 'Y_flightlog_m'])
+                            f'IMU_ATTI({sensors_working[0]}):barometer:Smooth[meters]', 'X_flightlog_m',
+                            'Y_flightlog_m'])
         cols = np.concatenate((mag_data.columns.values, fl_cols), axis=None)
         new_df = new_df[cols]
 
@@ -292,9 +302,9 @@ class MyFrame(MyPrepFrame):
         # get correct save format
         sensor = self.sensor_radio_box.GetStringSelection()
         if sensor == 'MagArrow':
-            fl_format = config['MA']['save_col_format'] + ',%.8f,%.8f,%s,%.3f,%.3f'
+            fl_format = config['MA']['save_col_format'] + ',%.8f,%.8f,%s,%.3f,%.3f,%.3f'
         elif sensor == 'MagDrone':
-            fl_format = config['MD']['save_col_format'] + ',%.8f,%.8f,%s,%.3f,%.3f'
+            fl_format = config['MD']['save_col_format'] + ',%.8f,%.8f,%s,%.3f,%.3f,%.3f'
         else:
             self.log_text.AppendText(f'{datetime.now()}:\tWrong sensor selection.')
             return
