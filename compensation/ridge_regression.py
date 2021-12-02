@@ -46,37 +46,19 @@ def get_g(x, y, z, hp_freq, lp_freq, tap_p, sampling_rate, eddy=True):
     ny = ft.filter_hp(ny, freq=hp_freq, tap_p=tap_p, df=sampling_rate)
     nz = ft.filter_hp(nz, freq=hp_freq, tap_p=tap_p, df=sampling_rate)
 
-    for i in range(len(x)):
-        if eddy:  # include parameters for eddy currents
-            g.append([nx[i],
-                      ny[i],
-                      nz[i],
-                      f[i] * nx[i] * nx[i],
-                      f[i] * nx[i] * ny[i],
-                      f[i] * nx[i] * nz[i],
-                      f[i] * ny[i] * nz[i],
-                      f[i] * nz[i] * nz[i],
-                      f[i] * nx[i] * dx[i],
-                      f[i] * nx[i] * dy[i],
-                      f[i] * nx[i] * dz[i],
-                      f[i] * ny[i] * dx[i],
-                      f[i] * ny[i] * dz[i],
-                      f[i] * nz[i] * dx[i],
-                      f[i] * nz[i] * dy[i],
-                      f[i] * nz[i] * dz[i]
-                      ])
-        else:
-            g.append([nx[i],
-                      ny[i],
-                      nz[i],
-                      f[i] * nx[i] * nx[i],
-                      f[i] * nx[i] * ny[i],
-                      f[i] * nx[i] * nz[i],
-                      f[i] * ny[i] * nz[i],
-                      f[i] * nz[i] * nz[i]
-                      ])
+    if eddy:
+        g = np.array([nx, ny, nz,
+                      f * nx * nx, f * nx * ny, f * nx * nz,
+                      f * ny * nz,
+                      f * nz * nz,
+                      f * nx * dx, f * nx * dy, f * nx * dz,
+                      f * ny * dx, f * ny * dz,
+                      f * nz * dx, f * nz * dy, f * nz * dz])
+    else:
+        g = np.array([nx, ny, nz,
+                      f * nx * nx, f * nx * ny, f * nx * nz, f * ny * nz, f * nz * nz])
 
-    return np.array(g)
+    return g.T
 
 
 def least_sqr(g, data, hp_freq):
